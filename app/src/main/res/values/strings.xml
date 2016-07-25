@@ -5,4 +5,13 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!--TODO: add the app id here-->
+    <!--TODO: IMPORTANT: REMOVE APP ID BEFORE COMMITTING-->
+    <!--DO NOT COMMIT APP ID TO GITHUB-->
+    <string name="facebook_app_id"></string>
+
+    <!--Dummy Texts-->
+    <string name="skillset_dummy_text">Crafts\nLeadership\nComputer Work</string>
+    <string name="reputation_dummy_text">75%</string>
 </resources>
