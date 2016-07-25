@@ -54,10 +54,10 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            MapFragment mapFragment = new MapFragment();
+            MapScreenFragment mapScreenFragment = new MapScreenFragment();
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, mapFragment)
+                    .add(R.id.fragment_container, mapScreenFragment)
                     .commit();
             currentScreen = HomeScreenState.MAP;
         }
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity
             if (currentScreen != HomeScreenState.MAP) {
                 // Map is not the current screen, so change it!
                 currentScreen = HomeScreenState.MAP;
-                MapFragment frag = new MapFragment();
+                MapScreenFragment frag = new MapScreenFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, frag).commit();
             }

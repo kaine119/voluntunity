@@ -6,10 +6,11 @@
 
     <string name="action_settings">Settings</string>
 
-    <!--TODO: add the app id here-->
-    <!--TODO: IMPORTANT: REMOVE APP ID BEFORE COMMITTING-->
+    <!--TODO: add facebook and google map app ids here-->
+    <!--TODO: IMPORTANT: REMOVE APP IDs BEFORE COMMITTING-->
     <!--DO NOT COMMIT APP ID TO GITHUB-->
     <string name="facebook_app_id"></string>
+    <string name="maps_app_id"></string>
 
     <!--Dummy Texts-->
     <string name="skillset_dummy_text">Crafts\nLeadership\nComputer Work</string>
