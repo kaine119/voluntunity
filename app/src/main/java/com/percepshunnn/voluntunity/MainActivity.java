@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.games.leaderboard.Leaderboard;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -131,6 +133,18 @@ public class MainActivity extends AppCompatActivity
                         .replace(R.id.fragment_container, frag).commit();
 
             }
+        } else if (id == R.id.nav_leaderboard) {
+            navMenu.findItem(R.id.nav_map_filters).setVisible(false);
+
+            // Fragment change
+            if (currentScreen != HomeScreenState.LEADERBOARD) {
+                // Leaderboard is not current screen, change it!
+                currentScreen = HomeScreenState.LEADERBOARD;
+                LeaderboardFragment frag = new LeaderboardFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, frag).commit();
+
+            }
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -141,5 +155,6 @@ public class MainActivity extends AppCompatActivity
 // represents which home screen the user is currently on.
 enum HomeScreenState {
     MAP,
-    PROFILE
+    PROFILE,
+    LEADERBOARD
 }
