@@ -30,4 +30,5 @@ dependencies {
     compile 'com.android.support:design:24.0.0'
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.sothree.slidinguppanel:library:3.3.0'
 }

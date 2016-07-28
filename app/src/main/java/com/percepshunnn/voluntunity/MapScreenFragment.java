@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,6 +20,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
+import org.w3c.dom.Text;
 
 /**
  * Map Fragment
@@ -29,15 +33,18 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
     private MapView mapView;
     LatLng mLocation = new LatLng(1.379348, 103.849876);
 
+    private SlidingUpPanelLayout infoPanelParent;
+
     public MapScreenFragment() {
         // Required empty public constructor
     }
 
-//    @Override
-//    public void onResume() {
-//        mapView.onResume();
-//        super.onResume();
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        // get a map
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+    }
 //
 //    @Override
 //    public void onDestroy() {
@@ -65,7 +72,12 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(this);
+
+        infoPanelParent = (SlidingUpPanelLayout) view.findViewById(R.id.info_panel_parent);
+        infoPanelParent.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        Log.d("MapFragment", "onViewCreated");
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -76,8 +88,15 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Toast.makeText(getContext(), "Hello!", Toast.LENGTH_SHORT).show();
+                infoPanelParent.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                Log.d("MapFragment", "onMarkerClick: panel to open");
                 return true;
+            }
+        });
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                infoPanelParent.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             }
         });
         Log.d("MapFragment", "onMapReady");
