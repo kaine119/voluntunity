@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +48,8 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
     private TextView eventAddress;
     private TextView eventRoles;
     private TextView eventSkills;
+    private Button signUp;
+    private TextView upcoming1;
 
     String[][] mTestArray;
 
@@ -98,6 +102,8 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
         eventAddress = (TextView) view.findViewById(R.id.eventAddress);
         eventRoles = (TextView) view.findViewById(R.id.eventRoles);
         eventSkills = (TextView) view.findViewById(R.id.eventSkills);
+        signUp = (Button) view.findViewById(R.id.signUp);
+        upcoming1 = (TextView) view.findViewById(R.id.upcoming1);
         Log.d("MapFragment", "onViewCreated");
     }
 
@@ -133,11 +139,16 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
                 infoPanelParent.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             }
         });
+
+
         Log.d("MapFragment", "onMapReady");
+
+
     }
 
-    public void displayEventDetails(String id) {
+    public void displayEventDetails(final String id) {
         String[] eventToDisplay = new String[0];
+
         for (String[] event : mTestArray) {
             if (event[0].equals(id)) {
                 eventToDisplay = event;
@@ -156,6 +167,7 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
         }
 
     }
+
 
 }
 

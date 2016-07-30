@@ -137,6 +137,19 @@ public class MainActivity extends AppCompatActivity
 
             }
         }
+        else if (id == R.id.nav_upcomng) {
+            navMenu.findItem(R.id.nav_map_filters).setVisible(false);
+
+            // Fragment change
+            if (currentScreen != HomeScreenState.UPCOMING) {
+                // Upcoming is not current screen, change it!
+                currentScreen = HomeScreenState.UPCOMING;
+                UpcomingFragment frag = new UpcomingFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, frag).commit();
+
+            }
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -147,5 +160,6 @@ public class MainActivity extends AppCompatActivity
 enum HomeScreenState {
     MAP,
     PROFILE,
-    LEADERBOARD
+    LEADERBOARD,
+    UPCOMING
 }
