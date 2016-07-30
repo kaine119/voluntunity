@@ -1,8 +1,11 @@
 package com.percepshunnn.voluntunity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.SharedPreferencesCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,14 +15,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.google.android.gms.games.leaderboard.Leaderboard;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     // Current screen
     HomeScreenState currentScreen;
+    TextView mDrawerNameText;
+    TextView mDrawerEmailText;
+    TextView mDrawerScoreText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +63,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_map);
         //</editor-fold>
 
         // Begin here.
@@ -62,6 +79,29 @@ public class MainActivity extends AppCompatActivity
                     .add(R.id.fragment_container, mapScreenFragment)
                     .commit();
             currentScreen = HomeScreenState.MAP;
+        }
+
+        View view = navigationView.getHeaderView(0);
+        mDrawerNameText = (TextView) view.findViewById(R.id.drawer_username_text);
+        mDrawerEmailText = (TextView) view.findViewById(R.id.drawer_email_text);
+        mDrawerScoreText = (TextView) view.findViewById(R.id.drawer_score_text);
+
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
+        // Persistency for email on left bar
+        SharedPreferences sharedPrefs = getPreferences(MODE_PRIVATE);
+        if (sharedPrefs.getString("email", null) != null) {
+            // User is signed in
+            mDrawerNameText.setText(sharedPrefs.getString("name", null));
+            Log.d("MainActivity", "onCreate: saved email: " + sharedPrefs.getString("email", null));
+            mDrawerEmailText.setText(sharedPrefs.getString("email", null));
+            mDrawerScoreText.setVisibility(View.VISIBLE);
+        } else {
+            // user is signed out
+            mDrawerNameText.setText("Logged out");
+            mDrawerEmailText.setText("Please sign in");
+            mDrawerScoreText.setVisibility(View.GONE);
         }
     }
 

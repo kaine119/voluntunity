@@ -1,8 +1,12 @@
 package com.percepshunnn.voluntunity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +18,15 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 
@@ -29,17 +37,49 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
 
     LoginButton mLoginButton;
     CallbackManager mCallbackManager;
-    TextView mName;
+
+    // View references
+    // Profile page itself
+    TextView mNameText;
     TextView mIdText;
     TextView mRepText;
     TextView mSkillsText;
     Button mLogoutButton;
+    // Nav drawer
+    TextView mDrawerNameText;
+    TextView mDrawerEmailText;
+    TextView mDrawerScoreText;
+
+    // Keeping name persistent requires shared preferences.
+    SharedPreferences mSharedPref;
 
 
     private FacebookCallback<LoginResult> mLoginCallback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
-            AccessToken token = loginResult.getAccessToken();
+            GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject object, GraphResponse response) {
+                            try {
+                                mDrawerNameText.setText(Profile.getCurrentProfile().getName());
+                                mDrawerEmailText.setText(object.getString("email"));
+                                mDrawerScoreText.setVisibility(View.VISIBLE);
+
+                                // Persistency!
+                                SharedPreferences.Editor ed = mSharedPref.edit();
+                                ed.putString("email", object.getString("email"));
+                                ed.putString("name", Profile.getCurrentProfile().getName());
+                                ed.commit();
+                            } catch (JSONException e) {
+                                Log.d("MainActivity", "onCompleted: something real bad happened");
+                            }
+                        }
+                    });
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "email");
+            request.setParameters(parameters);
+            request.executeAsync();
             displayProfileDetails(Profile.getCurrentProfile());
         }
 
@@ -61,6 +101,9 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
         // Initialise facebook sdk
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         mCallbackManager = CallbackManager.Factory.create();
+
+
+
         return inflater.inflate(R.layout.content_profile, container, false);
     }
 
@@ -74,12 +117,18 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // View references
-        mName = (TextView) view.findViewById(R.id.name_text);
+        // <editor-fold desc="View References">
+        mNameText = (TextView) view.findViewById(R.id.name_text);
         mLogoutButton = (Button) view.findViewById(R.id.logout_button);
         mIdText = (TextView) view.findViewById(R.id.id_text);
         mSkillsText = (TextView) view.findViewById(R.id.skillsText);
         mRepText = (TextView) view.findViewById(R.id.rep_val);
+
+        mDrawerEmailText = (TextView) getActivity().findViewById(R.id.drawer_email_text);
+        mDrawerNameText = (TextView) getActivity().findViewById(R.id.drawer_username_text);
+        mDrawerScoreText = (TextView) getActivity().findViewById(R.id.drawer_score_text);
+
+        //</editor-fold>
 
         // This is a mcTesty for Facebook Login
         // TODO: this will probably be changed later
@@ -95,31 +144,47 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
             public void onClick(View view) {
                 LoginManager.getInstance().logOut();
                 displayProfileDetails(Profile.getCurrentProfile());
+
+                // Remove email from persistent storage
+                SharedPreferences.Editor ed = mSharedPref.edit();
+                ed.clear();
+                ed.commit();
             }
         });
 
+
         displayProfileDetails(Profile.getCurrentProfile());
+
+        mSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
     }
 
     private void displayProfileDetails(Profile profile) {
         // Takes a profile (Profile.getCurrentProfile()) and puts it on profile page.
         if (profile != null) {
-            // logged in, display profile details
-            mName.setText(profile.getName());
+            // logged in, replace login button with logout button
+            mLogoutButton.setVisibility(View.VISIBLE);
+            mLoginButton.setVisibility(View.GONE);
+
+            // Show user details on profile page
+            mNameText.setText(profile.getName());
             mIdText.setText(profile.getId());
             mRepText.setText(R.string.reputation_dummy_text);
             mSkillsText.setText(R.string.skillset_dummy_text);
-            mLogoutButton.setVisibility(View.VISIBLE);
-            mLoginButton.setVisibility(View.GONE);
         }
         else if (profile == null) {
             // logged out, display placeholders
-            mName.setText("Logged Out");
+            mNameText.setText("Logged Out");
             mIdText.setText("User id: \n (Purely for testing purposes!)");
             mRepText.setText("");
             mSkillsText.setText("");
             mLogoutButton.setVisibility(View.GONE);
             mLoginButton.setVisibility(View.VISIBLE);
+
+            // Show placeholders on drawer
+            mDrawerNameText.setText("Logged Out");
+            mDrawerEmailText.setText("Please log in");
+            mDrawerScoreText.setVisibility(View.GONE);
         }
     }
+
 }
