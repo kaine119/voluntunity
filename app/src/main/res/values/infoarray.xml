@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="event1">
+        <item name="id">item1</item>
+        <item name="location_lat">1.280691</item>
+        <item name="location_lon">103.824854</item>
+        <item name="title">Hot meals home delivery for elderly</item>
+        <item name="organisation">Presbyterian Community Services</item>
+        <item name="date">05-Aug-16</item>
+        <item name="time">9 am to 12 pm</item>
+        <item name="description">Boundaries served: Jalan Bukit Merah, Queenstown, Commonwealth, Holland close, Ghim Moh, Dover, Clementi, West Coast, Pandan Garden Teban Garden.</item>
+        <item name="address">Dorcas Home Care Service,Blk 105 Jalan Bukit Merah #01-1912 </item>
+        <item name="roles"> To assist in the meals run to the home of the frail elderly. </item>
+        <item name="skills">No experience needed. Able to speak dialects or simple Malay.</item>
+
+    </string-array>
+    <string-array name="event2">
+        <item name="id">item2</item>
+        <item name="location_lat">1.350510</item>
+        <item name="location_lon">103.849747</item>
+        <item name="title">Habitat Flag Day</item>
+        <item name="organisation">Habitat for Humanity Singapore Ltd</item>
+        <item name="date">06-Aug-16</item>
+        <item name="time">9 am to 1 pm</item>
+        <item name="description">Thank you for expressing your interest in joining us for Small Change for Big Change (Flag Day) 2016! Through this event, we hope to:- Raise awareness about the work HFHSG does in eradicating poverty housing both locally and abroad, and- Raise funds to cover the expenses of daily operations and programmes of HFHSG</item>
+        <item name="address">Bishan Bus Interchange 514 Bishan Street 13 Singapore 570514</item>
+        <item name="roles">Collect donations from public.</item>
+        <item name="skills">NA</item>
+    </string-array>
+    <array name="events">
+        <item>@array/event1</item>
+        <item>@array/event2</item>
+    </array>
+
+
+
+</resources>

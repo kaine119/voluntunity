@@ -12,6 +12,7 @@
         android:background="@color/colorPrimaryDark"
         >
         <TextView
+            android:id="@+id/eventName"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Opportunity Title"
@@ -20,9 +21,64 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/eventOrganization"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Literally \n A\nN\nY\nT\nH\nI\nN\nG"
+        android:text="Organization"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:id="@+id/eventDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:id="@+id/eventTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Time"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:id="@+id/eventDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:id="@+id/eventAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Address"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:id="@+id/eventRoles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Roles"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:id="@+id/eventSkills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Skills"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"/>
