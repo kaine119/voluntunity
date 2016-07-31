@@ -45,6 +45,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
     TextView mRepText;
     TextView mSkillsText;
     Button mLogoutButton;
+    TextView mHoursText;
     // Nav drawer
     TextView mDrawerNameText;
     TextView mDrawerEmailText;
@@ -123,6 +124,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
         mIdText = (TextView) view.findViewById(R.id.id_text);
         mSkillsText = (TextView) view.findViewById(R.id.skillsText);
         mRepText = (TextView) view.findViewById(R.id.rep_val);
+        mHoursText = (TextView) view.findViewById(R.id.hours_text);
 
         mDrawerEmailText = (TextView) getActivity().findViewById(R.id.drawer_email_text);
         mDrawerNameText = (TextView) getActivity().findViewById(R.id.drawer_username_text);
@@ -170,6 +172,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
             mIdText.setText(profile.getId());
             mRepText.setText(R.string.reputation_dummy_text);
             mSkillsText.setText(R.string.skillset_dummy_text);
+            mHoursText.setText("36");
         }
         else if (profile == null) {
             // logged out, display placeholders
@@ -179,7 +182,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
             mSkillsText.setText("");
             mLogoutButton.setVisibility(View.GONE);
             mLoginButton.setVisibility(View.VISIBLE);
-
+            mHoursText.setText("");
             // Show placeholders on drawer
             mDrawerNameText.setText("Logged Out");
             mDrawerEmailText.setText("Please log in");
