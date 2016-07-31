@@ -14,9 +14,11 @@
             android:title="Profile" />
         <item
             android:id="@+id/nav_leaderboard"
+            android:icon="@drawable/ic_leaderboard"
             android:title="Leaderboard" />
         <item
             android:id="@+id/nav_upcomng"
+            android:icon="@drawable/ic_upcoming"
             android:title="Upcoming" />
 
     </group>
@@ -26,12 +28,10 @@
             <!--TODO: come up with actual filters-->
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="Filter 1" />
             <item
                 android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="Filter 2" />
         </menu>
     </item>
 
