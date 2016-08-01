@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -24,6 +25,7 @@ import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +48,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
     TextView mSkillsText;
     Button mLogoutButton;
     TextView mHoursText;
+    ImageView mProfileImage;
     // Nav drawer
     TextView mDrawerNameText;
     TextView mDrawerEmailText;
@@ -67,10 +70,16 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
                                 mDrawerEmailText.setText(object.getString("email"));
                                 mDrawerScoreText.setVisibility(View.VISIBLE);
 
+                                // Setting a picture source to a url natively is surprisingly hard.
+                                // It's easier to do this with Picasso, a library.
+                                String imgUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
+                                Picasso.with(getContext()).load(imgUrl).resize(200, 200).into(mProfileImage);
+
                                 // Persistency!
                                 SharedPreferences.Editor ed = mSharedPref.edit();
                                 ed.putString("email", object.getString("email"));
                                 ed.putString("name", Profile.getCurrentProfile().getName());
+                                ed.putString("picture", imgUrl);
                                 ed.commit();
                             } catch (JSONException e) {
                                 Log.d("MainActivity", "onCompleted: something real bad happened");
@@ -78,7 +87,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
                         }
                     });
             Bundle parameters = new Bundle();
-            parameters.putString("fields", "email");
+            parameters.putString("fields", "email,picture");
             request.setParameters(parameters);
             request.executeAsync();
             displayProfileDetails(Profile.getCurrentProfile());
@@ -125,6 +134,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
         mSkillsText = (TextView) view.findViewById(R.id.skillsText);
         mRepText = (TextView) view.findViewById(R.id.rep_val);
         mHoursText = (TextView) view.findViewById(R.id.hours_text);
+        mProfileImage = (ImageView) view.findViewById(R.id.profile_picture);
 
         mDrawerEmailText = (TextView) getActivity().findViewById(R.id.drawer_email_text);
         mDrawerNameText = (TextView) getActivity().findViewById(R.id.drawer_username_text);
@@ -155,9 +165,9 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
         });
 
 
+        mSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         displayProfileDetails(Profile.getCurrentProfile());
 
-        mSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
     }
 
     private void displayProfileDetails(Profile profile) {
@@ -173,6 +183,12 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
             mRepText.setText(R.string.reputation_dummy_text);
             mSkillsText.setText(R.string.skillset_dummy_text);
             mHoursText.setText("36");
+
+            // Profile image
+            String imgUrl = mSharedPref.getString("picture", null);
+            if (imgUrl != null) {
+                Picasso.with(getContext()).load(imgUrl).resize(200, 200).into(mProfileImage);
+            }
         }
         else if (profile == null) {
             // logged out, display placeholders
@@ -183,6 +199,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
             mLogoutButton.setVisibility(View.GONE);
             mLoginButton.setVisibility(View.VISIBLE);
             mHoursText.setText("");
+            mProfileImage.setImageDrawable(null);
             // Show placeholders on drawer
             mDrawerNameText.setText("Logged Out");
             mDrawerEmailText.setText("Please log in");

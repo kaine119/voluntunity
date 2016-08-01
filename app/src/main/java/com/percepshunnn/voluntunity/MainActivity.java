@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
@@ -23,6 +24,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.google.android.gms.games.leaderboard.Leaderboard;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity
     TextView mDrawerNameText;
     TextView mDrawerEmailText;
     TextView mDrawerScoreText;
+    ImageView mDrawerProfileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,7 @@ public class MainActivity extends AppCompatActivity
         mDrawerNameText = (TextView) view.findViewById(R.id.drawer_username_text);
         mDrawerEmailText = (TextView) view.findViewById(R.id.drawer_email_text);
         mDrawerScoreText = (TextView) view.findViewById(R.id.drawer_score_text);
+        mDrawerProfileImage = (ImageView) view.findViewById(R.id.drawer_profile_image);
 
 
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -87,12 +91,14 @@ public class MainActivity extends AppCompatActivity
             mDrawerNameText.setText(sharedPrefs.getString("name", null));
             Log.d("MainActivity", "onCreate: saved email: " + sharedPrefs.getString("email", null));
             mDrawerEmailText.setText(sharedPrefs.getString("email", null));
+            Picasso.with(this).load(sharedPrefs.getString("picture", null)).resize(100, 100).into(mDrawerProfileImage);
             mDrawerScoreText.setVisibility(View.VISIBLE);
         } else {
             // user is signed out
             mDrawerNameText.setText("Logged out");
             mDrawerEmailText.setText("Please sign in");
             mDrawerScoreText.setVisibility(View.GONE);
+            mDrawerProfileImage.setVisibility(View.GONE);
         }
     }
 
@@ -194,6 +200,8 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }
 
 // represents which home screen the user is currently on.
