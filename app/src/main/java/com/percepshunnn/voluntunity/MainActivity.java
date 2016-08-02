@@ -196,5 +196,4 @@ enum HomeScreenState {
     MAP,
     PROFILE,
     LEADERBOARD,
-    UPCOMING
 }
