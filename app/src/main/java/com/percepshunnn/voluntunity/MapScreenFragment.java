@@ -1,26 +1,20 @@
 package com.percepshunnn.voluntunity;
 
 import android.content.Intent;
-import android.content.res.TypedArray;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -29,11 +23,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Map Fragment
@@ -51,6 +41,7 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
     private TextView eventAddress;
     private TextView eventRoles;
     private TextView eventSkills;
+    private Button   signUp;
 
     @Override
     public void onResume() {
@@ -89,6 +80,7 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
         eventAddress = (TextView) view.findViewById(R.id.eventAddress);
         eventRoles = (TextView) view.findViewById(R.id.eventRoles);
         eventSkills = (TextView) view.findViewById(R.id.eventSkills);
+        signUp = (Button) view.findViewById(R.id.signUp);
         Log.d("MapFragment", "onViewCreated");
 
 
@@ -145,7 +137,7 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
     }
 
     public void displayEventDetails(final String id) {
-        String[] eventToDisplay = new String[8];
+        final String[] eventToDisplay = new String[9];
         try {
             String strJson = getResources().getString(R.string.eventsJson);
             JSONObject jsonRootObject = new JSONObject(strJson);
@@ -161,6 +153,7 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
                     eventToDisplay[5] = jsonObject.optString("address").toString();
                     eventToDisplay[6] = jsonObject.optString("roles").toString();
                     eventToDisplay[7] = jsonObject.optString("skills").toString();
+                    eventToDisplay[8] = jsonObject.optString("url").toString();
                     break;
                 }
             }
@@ -174,11 +167,18 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
                 eventRoles.setText(eventToDisplay[6]);
                 eventSkills.setText(eventToDisplay[7]);
             }
+            signUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri uriUrl = Uri.parse(eventToDisplay[8]);
+                    Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                    startActivity(launchBrowser);
+                }
+            });
         }catch (JSONException e) {
             e.printStackTrace();
             android.os.Process.killProcess(android.os.Process.myPid());
         }
-
     }
 
 
