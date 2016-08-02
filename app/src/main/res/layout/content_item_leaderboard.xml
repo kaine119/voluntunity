@@ -2,25 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/leaderboard_item_image"
+        android:src="@drawable/ic_time"
+        android:layout_alignTop="@+id/leaderboard_item_name"
+        android:layout_alignParentStart="true" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:text="Name"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:id="@+id/leaderboard_item_name"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:layout_toRightOf="@+id/leaderboard_item_image"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/leaderboard_item_name"
         android:text="900"
-        android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:textColor="@android:color/black"
         android:id="@+id/leaderboard_item_score"
-        />
+        android:layout_below="@+id/leaderboard_item_name"
+        android:layout_alignLeft="@id/leaderboard_item_name" />
 
 </RelativeLayout>

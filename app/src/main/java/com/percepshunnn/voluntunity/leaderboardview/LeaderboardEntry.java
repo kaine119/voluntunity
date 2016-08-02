@@ -1,16 +1,31 @@
 package com.percepshunnn.voluntunity.leaderboardview;
 
+import android.util.Log;
+
+import java.util.List;
+
 public class LeaderboardEntry {
     private String name;
     private int score;
+    private List<String> skills;
+    private long id;
+    private int hours;
+    private int reputation;
 
-    public LeaderboardEntry (String name, int score) {
+    public LeaderboardEntry(){}
+
+    public LeaderboardEntry (String name, List<String> skills, long id, int reputation,  int hours) {
         this.name = name;
-        this.score = score;
+        this.skills = skills;
+        this.id = id;
+        this.hours = hours;
+        this.reputation = reputation;
+        this.score = hours * reputation;
+        Log.d("LeaderboardEntry made", "score: "+this.score);
     }
 
     public String getName(){
-        return this.name;
+        return name;
     }
 
     public void setName(String name){
@@ -18,10 +33,43 @@ public class LeaderboardEntry {
     }
 
     public int getScore(){
-        return this.score;
+        return this.hours * this.reputation;
     }
 
     public void setScore(int score) {
         this.score = score;
     }
+
+    public List<String> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<String> skills) {
+        this.skills = skills;
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getHours() {
+        return this.hours;
+    }
+
+    public void setHours(int hours) {
+        this.hours = hours;
+    }
+
+    public int getReputation() {
+        return this.reputation;
+    }
+
+    public void setReputation(int reputation) {
+        this.reputation = reputation;
+    }
+
 }

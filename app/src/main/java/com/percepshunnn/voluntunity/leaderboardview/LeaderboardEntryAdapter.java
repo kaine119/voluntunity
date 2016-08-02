@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.percepshunnn.voluntunity.R;
@@ -13,10 +14,10 @@ import java.util.List;
 
 
 public class LeaderboardEntryAdapter extends RecyclerView.Adapter<LeaderboardEntryAdapter.ViewHolder> {
-    private LeaderboardEntry[] entries;
+    private List<LeaderboardEntry> entries;
 
 
-    public LeaderboardEntryAdapter(LeaderboardEntry[] entries) {
+    public LeaderboardEntryAdapter(List<LeaderboardEntry> entries) {
         this.entries = entries;
     }
 
@@ -40,12 +41,12 @@ public class LeaderboardEntryAdapter extends RecyclerView.Adapter<LeaderboardEnt
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.nameText.setText(entries[position].getName());
-        holder.scoreText.setText(Integer.toString(entries[position].getScore()));
+        holder.nameText.setText(entries.get(position).getName());
+        holder.scoreText.setText(Integer.toString(entries.get(position).getScore()));
     }
 
     @Override
     public int getItemCount() {
-        return entries.length;
+        return this.entries.size();
     }
 }
