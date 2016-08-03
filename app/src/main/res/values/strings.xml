@@ -12,7 +12,5 @@
     <string name="facebook_app_id"></string>
     <string name="maps_app_id"></string>
 
-    <!--Dummy Texts-->
-    <string name="skillset_dummy_text">Crafts\nLeadership\nComputer Work</string>
-    <string name="reputation_dummy_text">75%</string>
+    <string name="leaderboard_logged_out">Sign in to access your leaderboard.</string>
 </resources>

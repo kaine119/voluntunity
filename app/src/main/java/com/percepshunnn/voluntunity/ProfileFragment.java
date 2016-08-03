@@ -3,9 +3,9 @@ package com.percepshunnn.voluntunity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -25,11 +24,18 @@ import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.percepshunnn.voluntunity.leaderboardview.LeaderboardEntry;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
+
+import java.util.Arrays;
 
 
 /**
@@ -53,9 +59,12 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
     TextView mDrawerNameText;
     TextView mDrawerEmailText;
     TextView mDrawerScoreText;
+    ImageView mDrawerProfileImage;
 
     // Keeping name persistent requires shared preferences.
     SharedPreferences mSharedPref;
+
+    LeaderboardEntry currentProfile;
 
 
     private FacebookCallback<LoginResult> mLoginCallback = new FacebookCallback<LoginResult>() {
@@ -69,11 +78,13 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
                                 mDrawerNameText.setText(Profile.getCurrentProfile().getName());
                                 mDrawerEmailText.setText(object.getString("email"));
                                 mDrawerScoreText.setVisibility(View.VISIBLE);
+                                mDrawerProfileImage.setVisibility(View.VISIBLE);
 
                                 // Setting a picture source to a url natively is surprisingly hard.
                                 // It's easier to do this with Picasso, a library.
                                 String imgUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
                                 Picasso.with(getContext()).load(imgUrl).resize(200, 200).into(mProfileImage);
+                                Picasso.with(getContext()).load(imgUrl).resize(100, 100).into(mDrawerProfileImage);
 
                                 // Persistency!
                                 SharedPreferences.Editor ed = mSharedPref.edit();
@@ -90,7 +101,46 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
             parameters.putString("fields", "email,picture");
             request.setParameters(parameters);
             request.executeAsync();
-            displayProfileDetails(Profile.getCurrentProfile());
+
+            displayBasicDetails(Profile.getCurrentProfile());
+
+            // Grab the database for users
+            // If the current user isn't on there, push data on
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            final DatabaseReference usersRef = database.getReference("users/");
+            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                String TAG = "ProfileFragment: FirebaseCallback";
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot userSnap : dataSnapshot.getChildren()) {
+                        LeaderboardEntry user = userSnap.getValue(LeaderboardEntry.class);
+                        Log.d(TAG, "onDataChange:    dbUserId: " + user.getId());
+                        Log.d(TAG, "onDataChange: localUserId: " + Long.parseLong(Profile.getCurrentProfile().getId()));
+                        if (Long.parseLong(Profile.getCurrentProfile().getId()) == user.getId()) {
+                            Log.d(TAG, "onDataChange: User should not be added");
+                            displayExtraDetails(user);
+                            return;
+                        }
+                    }
+
+                    // User hasn't been added.
+                    Log.d(TAG, "onDataChange: User should be added ");
+                    currentProfile = new LeaderboardEntry(
+                            Profile.getCurrentProfile().getName(),
+                            Arrays.asList("Placeholder1", "Placeholder2"),
+                            Long.parseLong(Profile.getCurrentProfile().getId()),
+                            0,
+                            0
+                    );
+                    usersRef.push().setValue(currentProfile);
+                    displayExtraDetails(currentProfile);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
 
         @Override
@@ -139,6 +189,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
         mDrawerEmailText = (TextView) getActivity().findViewById(R.id.drawer_email_text);
         mDrawerNameText = (TextView) getActivity().findViewById(R.id.drawer_username_text);
         mDrawerScoreText = (TextView) getActivity().findViewById(R.id.drawer_score_text);
+        mDrawerProfileImage = (ImageView) getActivity().findViewById(R.id.drawer_profile_image);
 
         //</editor-fold>
 
@@ -155,7 +206,9 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View view) {
                 LoginManager.getInstance().logOut();
-                displayProfileDetails(Profile.getCurrentProfile());
+
+                displayBasicDetails(null);
+                displayExtraDetails(null);
 
                 // Remove email from persistent storage
                 SharedPreferences.Editor ed = mSharedPref.edit();
@@ -164,47 +217,96 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
             }
         });
 
-
         mSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        displayProfileDetails(Profile.getCurrentProfile());
+
+        if (Profile.getCurrentProfile() != null) {
+            displayBasicDetails(Profile.getCurrentProfile());
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            final DatabaseReference usersRef = database.getReference("users/");
+            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot userSnap : dataSnapshot.getChildren()) {
+                        LeaderboardEntry user = userSnap.getValue(LeaderboardEntry.class);
+                        if (Long.parseLong(Profile.getCurrentProfile().getId()) == user.getId()) {
+                            displayExtraDetails(user);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            displayBasicDetails(null);
+            displayExtraDetails(null);
+        }
 
     }
 
-    private void displayProfileDetails(Profile profile) {
-        // Takes a profile (Profile.getCurrentProfile()) and puts it on profile page.
+    private void displayBasicDetails(Profile profile) {
         if (profile != null) {
-            // logged in, replace login button with logout button
+            mNameText.setText(profile.getName());
             mLogoutButton.setVisibility(View.VISIBLE);
             mLoginButton.setVisibility(View.GONE);
 
-            // Show user details on profile page
-            mNameText.setText(profile.getName());
-            mIdText.setText(profile.getId());
-            mRepText.setText(R.string.reputation_dummy_text);
-            mSkillsText.setText(R.string.skillset_dummy_text);
-            mHoursText.setText("36");
-
-            // Profile image
+            // Profile Picture
             String imgUrl = mSharedPref.getString("picture", null);
             if (imgUrl != null) {
                 Picasso.with(getContext()).load(imgUrl).resize(200, 200).into(mProfileImage);
+                Picasso.with(getContext()).load(imgUrl).resize(100, 100).into(mDrawerProfileImage);
+                mDrawerProfileImage.setVisibility(View.VISIBLE);
             }
+
+            // Set extra detail fields to "loading..."
+            mRepText.setText("Loading...");
+            mHoursText.setText("Loading...");
+            if (Build.VERSION.SDK_INT < 23) {
+                mSkillsText.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
+            } else {
+                mSkillsText.setTextAppearance(android.R.style.TextAppearance_Large);
+            }
+            mSkillsText.setText("Loading...");
         }
         else if (profile == null) {
-            // logged out, display placeholders
-            mNameText.setText("Logged Out");
-            mIdText.setText("User id: \n (Purely for testing purposes!)");
-            mRepText.setText("");
-            mSkillsText.setText("");
+            mNameText.setText("Name");
             mLogoutButton.setVisibility(View.GONE);
             mLoginButton.setVisibility(View.VISIBLE);
-            mHoursText.setText("");
             mProfileImage.setImageDrawable(null);
-            // Show placeholders on drawer
+            mDrawerProfileImage.setImageDrawable(null);
+
+
+            // Show placeholders in drawer
             mDrawerNameText.setText("Logged Out");
             mDrawerEmailText.setText("Please log in");
             mDrawerScoreText.setVisibility(View.GONE);
         }
     }
+
+    private void displayExtraDetails(@Nullable LeaderboardEntry profile) {
+        // for reputation, hours and skills
+        if (profile != null) {
+            mRepText.setText(Integer.toString(profile.getReputation()));
+            mHoursText.setText(Integer.toString(profile.getHours()));
+            if (Build.VERSION.SDK_INT < 23) {
+                mSkillsText.setTextAppearance(getContext(), android.R.style.TextAppearance_Small);
+            } else {
+                mSkillsText.setTextAppearance(android.R.style.TextAppearance_Small);
+            }
+
+            mSkillsText.setText("");
+            for (String current : profile.getSkills()) {
+                mSkillsText.append(current + "\n");
+            }
+        }
+        else if (profile == null) {
+            mRepText.setText("");
+            mHoursText.setText("");
+            mSkillsText.setText("");
+        }
+    }
+
 
 }

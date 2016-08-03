@@ -10,7 +10,17 @@
         android:id="@+id/leaderboard_parent"
         android:scrollbars="vertical"
         android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
         />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/leaderboard_logged_out"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:visibility="gone"
+        android:id="@+id/logged_out_text"/>
 
     <ProgressBar
         android:layout_width="wrap_content"
