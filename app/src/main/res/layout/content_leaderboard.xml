@@ -22,6 +22,16 @@
         android:visibility="gone"
         android:id="@+id/logged_out_text"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/leaderboard_no_friends"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:visibility="gone"
+        android:id="@+id/no_friends_text"
+        android:textAppearance="?android:textAppearanceMedium"/>
+
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

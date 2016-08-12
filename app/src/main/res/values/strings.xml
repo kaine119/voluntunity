@@ -13,4 +13,5 @@
     <string name="maps_app_id"></string>
 
     <string name="leaderboard_logged_out">Sign in to access your leaderboard.</string>
+    <string name="leaderboard_no_friends">You have no friends who use this app. \nTell them about it!</string>
 </resources>

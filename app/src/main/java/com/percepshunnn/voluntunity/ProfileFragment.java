@@ -13,14 +13,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.FacebookServiceException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -64,7 +67,11 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
     // Keeping name persistent requires shared preferences.
     SharedPreferences mSharedPref;
 
-    LeaderboardEntry currentProfile;
+    LeaderboardEntry mCurrentProfile;
+
+    DatabaseReference usersRef;
+
+    ProfileTracker mProfileTracker;
 
 
     private FacebookCallback<LoginResult> mLoginCallback = new FacebookCallback<LoginResult>() {
@@ -75,7 +82,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
                         @Override
                         public void onCompleted(JSONObject object, GraphResponse response) {
                             try {
-                                mDrawerNameText.setText(Profile.getCurrentProfile().getName());
+
                                 mDrawerEmailText.setText(object.getString("email"));
                                 mDrawerScoreText.setVisibility(View.VISIBLE);
                                 mDrawerProfileImage.setVisibility(View.VISIBLE);
@@ -102,45 +109,97 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
             request.setParameters(parameters);
             request.executeAsync();
 
-            displayBasicDetails(Profile.getCurrentProfile());
+            if (Profile.getCurrentProfile() == null) {
+                mProfileTracker = new ProfileTracker() {
+                    @Override
+                    protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile1) {
 
-            // Grab the database for users
-            // If the current user isn't on there, push data on
-            final FirebaseDatabase database = FirebaseDatabase.getInstance();
-            final DatabaseReference usersRef = database.getReference("users/");
-            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                String TAG = "ProfileFragment: FirebaseCallback";
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot userSnap : dataSnapshot.getChildren()) {
-                        LeaderboardEntry user = userSnap.getValue(LeaderboardEntry.class);
-                        Log.d(TAG, "onDataChange:    dbUserId: " + user.getId());
-                        Log.d(TAG, "onDataChange: localUserId: " + Long.parseLong(Profile.getCurrentProfile().getId()));
-                        if (Long.parseLong(Profile.getCurrentProfile().getId()) == user.getId()) {
-                            Log.d(TAG, "onDataChange: User should not be added");
-                            displayExtraDetails(user);
-                            return;
+                        final Profile currentProfile = currentProfile1;
+                        displayBasicDetails(currentProfile.getCurrentProfile());
+                        // Grab the database for users
+                        // If the current user isn't on there, push data on
+                        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        usersRef = database.getReference("users/");
+                        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            String TAG = "ProfileFragment: FirebaseCallback";
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot userSnap : dataSnapshot.getChildren()) {
+                                    LeaderboardEntry user = userSnap.getValue(LeaderboardEntry.class);
+                                    if (Profile.getCurrentProfile() != null) {
+                                        if (Long.parseLong(currentProfile.getId()) == user.getId()) {
+                                            Log.d(TAG, "onDataChange: User should not be added");
+                                            displayExtraDetails(user);
+                                            mProfileTracker.stopTracking();
+                                            return;
+                                        }
+                                    }
+
+                                }
+
+                                // User hasn't been added.
+                                Log.d(TAG, "onDataChange: User should be added ");
+                                mCurrentProfile = new LeaderboardEntry(
+                                        Profile.getCurrentProfile().getName(),
+                                        Arrays.asList("Placeholder1", "Placeholder2"),
+                                        Long.parseLong(currentProfile.getCurrentProfile().getId()),
+                                        0,
+                                        0
+                                );
+                                usersRef.push().setValue(mCurrentProfile);
+                                mProfileTracker.stopTracking();
+                                displayExtraDetails(mCurrentProfile);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                };
+            } else {
+                displayBasicDetails(Profile.getCurrentProfile());
+                // Grab the database for users
+                // If the current user isn't on there, push data on
+                final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                usersRef = database.getReference("users/");
+                usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    String TAG = "ProfileFragment: FirebaseCallback";
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot userSnap : dataSnapshot.getChildren()) {
+                            LeaderboardEntry user = userSnap.getValue(LeaderboardEntry.class);
+                            if (Profile.getCurrentProfile() != null) {
+                                if (Long.parseLong(Profile.getCurrentProfile().getId()) == user.getId()) {
+                                    Log.d(TAG, "onDataChange: User should not be added");
+                                    displayExtraDetails(user);
+                                    return;
+                                }
+                            }
+
                         }
+
+                        // User hasn't been added.
+                        Log.d(TAG, "onDataChange: User should be added ");
+                        mCurrentProfile = new LeaderboardEntry(
+                                Profile.getCurrentProfile().getName(),
+                                Arrays.asList("Placeholder1", "Placeholder2"),
+                                Long.parseLong(Profile.getCurrentProfile().getId()),
+                                0,
+                                0
+                        );
+                        usersRef.push().setValue(mCurrentProfile);
+                        displayExtraDetails(mCurrentProfile);
                     }
 
-                    // User hasn't been added.
-                    Log.d(TAG, "onDataChange: User should be added ");
-                    currentProfile = new LeaderboardEntry(
-                            Profile.getCurrentProfile().getName(),
-                            Arrays.asList("Placeholder1", "Placeholder2"),
-                            Long.parseLong(Profile.getCurrentProfile().getId()),
-                            0,
-                            0
-                    );
-                    usersRef.push().setValue(currentProfile);
-                    displayExtraDetails(currentProfile);
-                }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }
 
-                }
-            });
         }
 
         @Override
@@ -150,7 +209,9 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
 
         @Override
         public void onError(FacebookException error) {
-
+            if (error instanceof FacebookServiceException) {
+                Toast.makeText(getContext(), "Could not connect to Facebook", Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
@@ -193,10 +254,13 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
 
         //</editor-fold>
 
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        usersRef = database.getReference("users/");
+
         // This is a mcTesty for Facebook Login
         // TODO: this will probably be changed later
         mLoginButton = (LoginButton) view.findViewById(R.id.login_button);
-        mLoginButton.setReadPermissions("email");
+        mLoginButton.setReadPermissions(Arrays.asList("email", "user_friends"));
 
         mLoginButton.setFragment(this);
 
@@ -221,24 +285,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
 
         if (Profile.getCurrentProfile() != null) {
             displayBasicDetails(Profile.getCurrentProfile());
-            final FirebaseDatabase database = FirebaseDatabase.getInstance();
-            final DatabaseReference usersRef = database.getReference("users/");
-            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot userSnap : dataSnapshot.getChildren()) {
-                        LeaderboardEntry user = userSnap.getValue(LeaderboardEntry.class);
-                        if (Long.parseLong(Profile.getCurrentProfile().getId()) == user.getId()) {
-                            displayExtraDetails(user);
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            usersRef.addListenerForSingleValueEvent(firebaseCallback);
         } else {
             displayBasicDetails(null);
             displayExtraDetails(null);
@@ -263,11 +310,6 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
             // Set extra detail fields to "loading..."
             mRepText.setText("Loading...");
             mHoursText.setText("Loading...");
-            if (Build.VERSION.SDK_INT < 23) {
-                mSkillsText.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
-            } else {
-                mSkillsText.setTextAppearance(android.R.style.TextAppearance_Large);
-            }
             mSkillsText.setText("Loading...");
         }
         else if (profile == null) {
@@ -290,11 +332,6 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
         if (profile != null) {
             mRepText.setText(Integer.toString(profile.getReputation()));
             mHoursText.setText(Integer.toString(profile.getHours()));
-            if (Build.VERSION.SDK_INT < 23) {
-                mSkillsText.setTextAppearance(getContext(), android.R.style.TextAppearance_Small);
-            } else {
-                mSkillsText.setTextAppearance(android.R.style.TextAppearance_Small);
-            }
 
             mSkillsText.setText("");
             for (String current : profile.getSkills()) {
@@ -308,5 +345,27 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
         }
     }
 
+    private ValueEventListener firebaseCallback = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            for (DataSnapshot userSnap : dataSnapshot.getChildren()) {
+                LeaderboardEntry user = userSnap.getValue(LeaderboardEntry.class);
+                if (Long.parseLong(Profile.getCurrentProfile().getId()) == user.getId()) {
+                    displayExtraDetails(user);
+                    return;
+                }
+            }
+        }
 
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        usersRef.removeEventListener(firebaseCallback);
+    }
 }
