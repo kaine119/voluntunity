@@ -179,8 +179,8 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment{
     };
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onPause() {
+        super.onPause();
         usersRef.removeEventListener(firebaseCallback);
     }
 }

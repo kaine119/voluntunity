@@ -82,7 +82,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
                         @Override
                         public void onCompleted(JSONObject object, GraphResponse response) {
                             try {
-
+                                mDrawerNameText.setText(Profile.getCurrentProfile().getName());
                                 mDrawerEmailText.setText(object.getString("email"));
                                 mDrawerScoreText.setVisibility(View.VISIBLE);
                                 mDrawerProfileImage.setVisibility(View.VISIBLE);
@@ -115,7 +115,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
                     protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile1) {
 
                         final Profile currentProfile = currentProfile1;
-                        displayBasicDetails(currentProfile.getCurrentProfile());
+                        displayBasicDetails(currentProfile);
                         // Grab the database for users
                         // If the current user isn't on there, push data on
                         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -303,7 +303,6 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
             String imgUrl = mSharedPref.getString("picture", null);
             if (imgUrl != null) {
                 Picasso.with(getContext()).load(imgUrl).resize(200, 200).into(mProfileImage);
-                Picasso.with(getContext()).load(imgUrl).resize(100, 100).into(mDrawerProfileImage);
                 mDrawerProfileImage.setVisibility(View.VISIBLE);
             }
 
@@ -348,6 +347,8 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
     private ValueEventListener firebaseCallback = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+
+
             for (DataSnapshot userSnap : dataSnapshot.getChildren()) {
                 LeaderboardEntry user = userSnap.getValue(LeaderboardEntry.class);
                 if (Long.parseLong(Profile.getCurrentProfile().getId()) == user.getId()) {
@@ -364,8 +365,10 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
     };
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onPause() {
+        super.onPause();
         usersRef.removeEventListener(firebaseCallback);
     }
+
+
 }
