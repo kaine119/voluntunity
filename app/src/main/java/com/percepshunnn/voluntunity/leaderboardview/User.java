@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.List;
 
-public class LeaderboardEntry {
+public class User {
     private String name;
     private int score;
     private List<String> skills;
@@ -12,16 +12,16 @@ public class LeaderboardEntry {
     private int hours;
     private int reputation;
 
-    public LeaderboardEntry(){}
+    public User(){}
 
-    public LeaderboardEntry (String name, List<String> skills, long id, int reputation,  int hours) {
+    public User(String name, List<String> skills, long id, int reputation, int hours) {
         this.name = name;
         this.skills = skills;
         this.id = id;
         this.hours = hours;
         this.reputation = reputation;
         this.score = hours * reputation;
-        Log.d("LeaderboardEntry made", "score: "+this.score);
+        Log.d("User made", "score: "+this.score);
     }
 
     public String getName(){

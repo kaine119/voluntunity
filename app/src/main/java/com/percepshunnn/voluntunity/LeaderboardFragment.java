@@ -23,20 +23,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.percepshunnn.voluntunity.leaderboardview.LeaderboardEntry;
+import com.percepshunnn.voluntunity.leaderboardview.User;
 import com.percepshunnn.voluntunity.leaderboardview.LeaderboardEntryAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LeaderboardFragment extends android.support.v4.app.Fragment{
 
-    List<LeaderboardEntry> entries = new ArrayList<>();
+    List<User> entries = new ArrayList<>();
     List<Long> friendsIdList = new ArrayList<>();
 
     // Things for the list (RecyclerView)
@@ -158,7 +157,7 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment{
             // dataSnapshot is the whole encompassing list
             // We'll have to iterate through each child to get the appropriate object
             for (DataSnapshot userSnap : dataSnapshot.getChildren()) {
-                LeaderboardEntry user = userSnap.getValue(LeaderboardEntry.class);
+                User user = userSnap.getValue(User.class);
                 // only include the entry if he's in the user's friends
                 if (friendsIdList.contains(user.getId())) {
                     entries.add(user);

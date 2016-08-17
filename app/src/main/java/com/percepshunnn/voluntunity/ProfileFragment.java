@@ -3,7 +3,6 @@ package com.percepshunnn.voluntunity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -32,7 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.percepshunnn.voluntunity.leaderboardview.LeaderboardEntry;
+import com.percepshunnn.voluntunity.leaderboardview.User;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -67,7 +66,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
     // Keeping name persistent requires shared preferences.
     SharedPreferences mSharedPref;
 
-    LeaderboardEntry mCurrentProfile;
+    User mCurrentProfile;
 
     DatabaseReference usersRef;
 
@@ -125,7 +124,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for (DataSnapshot userSnap : dataSnapshot.getChildren()) {
-                                    LeaderboardEntry user = userSnap.getValue(LeaderboardEntry.class);
+                                    User user = userSnap.getValue(User.class);
                                     if (Profile.getCurrentProfile() != null) {
                                         if (Long.parseLong(currentProfile.getId()) == user.getId()) {
                                             Log.d(TAG, "onDataChange: User should not be added");
@@ -139,7 +138,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
 
                                 // User hasn't been added.
                                 Log.d(TAG, "onDataChange: User should be added ");
-                                mCurrentProfile = new LeaderboardEntry(
+                                mCurrentProfile = new User(
                                         Profile.getCurrentProfile().getName(),
                                         Arrays.asList("Placeholder1", "Placeholder2"),
                                         Long.parseLong(currentProfile.getCurrentProfile().getId()),
@@ -169,7 +168,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot userSnap : dataSnapshot.getChildren()) {
-                            LeaderboardEntry user = userSnap.getValue(LeaderboardEntry.class);
+                            User user = userSnap.getValue(User.class);
                             if (Profile.getCurrentProfile() != null) {
                                 if (Long.parseLong(Profile.getCurrentProfile().getId()) == user.getId()) {
                                     Log.d(TAG, "onDataChange: User should not be added");
@@ -182,7 +181,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
 
                         // User hasn't been added.
                         Log.d(TAG, "onDataChange: User should be added ");
-                        mCurrentProfile = new LeaderboardEntry(
+                        mCurrentProfile = new User(
                                 Profile.getCurrentProfile().getName(),
                                 Arrays.asList("Placeholder1", "Placeholder2"),
                                 Long.parseLong(Profile.getCurrentProfile().getId()),
@@ -326,7 +325,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
         }
     }
 
-    private void displayExtraDetails(@Nullable LeaderboardEntry profile) {
+    private void displayExtraDetails(@Nullable User profile) {
         // for reputation, hours and skills
         if (profile != null) {
             mRepText.setText(Integer.toString(profile.getReputation()));
@@ -350,7 +349,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
 
 
             for (DataSnapshot userSnap : dataSnapshot.getChildren()) {
-                LeaderboardEntry user = userSnap.getValue(LeaderboardEntry.class);
+                User user = userSnap.getValue(User.class);
                 if (Long.parseLong(Profile.getCurrentProfile().getId()) == user.getId()) {
                     displayExtraDetails(user);
                     return;
