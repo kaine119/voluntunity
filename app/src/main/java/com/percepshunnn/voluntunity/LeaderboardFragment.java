@@ -90,7 +90,8 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        
+        getActivity().setTitle("Leaderboard");
+
         // Initialise loading bar so it shows up upon resuming activity
         mProgressBar.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.GONE);

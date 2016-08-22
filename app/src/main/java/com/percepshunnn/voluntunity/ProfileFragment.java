@@ -250,6 +250,8 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
 
         //</editor-fold>
 
+        getActivity().setTitle("Profile");
+
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         usersRef = database.getReference("users/");
 

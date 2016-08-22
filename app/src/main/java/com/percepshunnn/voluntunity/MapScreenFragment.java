@@ -69,6 +69,7 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.content_map, container, false);
+        getActivity().setTitle("Voluntunity");
         return v;
 
     }
