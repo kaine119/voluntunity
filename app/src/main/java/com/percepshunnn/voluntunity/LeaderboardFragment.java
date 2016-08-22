@@ -31,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LeaderboardFragment extends android.support.v4.app.Fragment{
@@ -134,6 +135,7 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment{
                                             Log.e("FacebookCallback", "onCompleted: something bad happened while trying to get leaderboard friends", e);
                                         }
                                     }
+
                                     usersRef.addListenerForSingleValueEvent(firebaseCallback);
                                 }
                             }
@@ -162,7 +164,11 @@ public class LeaderboardFragment extends android.support.v4.app.Fragment{
                 if (friendsIdList.contains(user.getId())) {
                     entries.add(user);
                 }
-
+                if (user.getId() == Long.parseLong(Profile.getCurrentProfile().getId())) {
+                    user.setName("Me");
+                    entries.add(user);
+                }
+                Collections.sort(entries);
                 // Update the recycler view that it has new things to show
                 mAdapter.notifyDataSetChanged();
 

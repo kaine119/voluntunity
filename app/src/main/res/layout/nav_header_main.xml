@@ -26,13 +26,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:id="@+id/drawer_username_text"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Score: 12359"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:id="@+id/drawer_score_text"
-        android:visibility="gone"/>
+
 
     <TextView
         android:id="@+id/drawer_email_text"

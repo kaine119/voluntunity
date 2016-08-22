@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity
     HomeScreenState currentScreen;
     TextView mDrawerNameText;
     TextView mDrawerEmailText;
-    TextView mDrawerScoreText;
     ImageView mDrawerProfileImage;
 
     @Override
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        
 
 
         //<editor-fold desc="nav drawer boilerplate code">
@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity
         View view = navigationView.getHeaderView(0);
         mDrawerNameText = (TextView) view.findViewById(R.id.drawer_username_text);
         mDrawerEmailText = (TextView) view.findViewById(R.id.drawer_email_text);
-        mDrawerScoreText = (TextView) view.findViewById(R.id.drawer_score_text);
         mDrawerProfileImage = (ImageView) view.findViewById(R.id.drawer_profile_image);
 
 
@@ -92,12 +91,10 @@ public class MainActivity extends AppCompatActivity
             Log.d("MainActivity", "onCreate: saved email: " + sharedPrefs.getString("email", null));
             mDrawerEmailText.setText(sharedPrefs.getString("email", null));
             Picasso.with(this).load(sharedPrefs.getString("picture", null)).resize(100, 100).into(mDrawerProfileImage);
-            mDrawerScoreText.setVisibility(View.VISIBLE);
         } else {
             // user is signed out
             mDrawerNameText.setText("Logged out");
             mDrawerEmailText.setText("Please sign in");
-            mDrawerScoreText.setVisibility(View.GONE);
             mDrawerProfileImage.setVisibility(View.GONE);
         }
     }

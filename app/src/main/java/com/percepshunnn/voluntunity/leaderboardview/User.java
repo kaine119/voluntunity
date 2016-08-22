@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.List;
 
-public class User {
+public class User implements Comparable<User> {
     private String name;
     private int score;
     private List<String> skills;
@@ -22,6 +22,17 @@ public class User {
         this.reputation = reputation;
         this.score = hours * reputation;
         Log.d("User made", "score: "+this.score);
+    }
+
+    @Override
+    public int compareTo(User other) {
+        if (this.getScore() > other.getScore()) {
+            return -1;
+        }
+        else if (other.getScore() > this.getScore()) {
+            return 1;
+        }
+        else {return 0;}
     }
 
     public String getName(){

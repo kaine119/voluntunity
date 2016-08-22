@@ -60,7 +60,6 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
     // Nav drawer
     TextView mDrawerNameText;
     TextView mDrawerEmailText;
-    TextView mDrawerScoreText;
     ImageView mDrawerProfileImage;
 
     // Keeping name persistent requires shared preferences.
@@ -83,7 +82,6 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
                             try {
                                 mDrawerNameText.setText(Profile.getCurrentProfile().getName());
                                 mDrawerEmailText.setText(object.getString("email"));
-                                mDrawerScoreText.setVisibility(View.VISIBLE);
                                 mDrawerProfileImage.setVisibility(View.VISIBLE);
 
                                 // Setting a picture source to a url natively is surprisingly hard.
@@ -248,7 +246,6 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
 
         mDrawerEmailText = (TextView) getActivity().findViewById(R.id.drawer_email_text);
         mDrawerNameText = (TextView) getActivity().findViewById(R.id.drawer_username_text);
-        mDrawerScoreText = (TextView) getActivity().findViewById(R.id.drawer_score_text);
         mDrawerProfileImage = (ImageView) getActivity().findViewById(R.id.drawer_profile_image);
 
         //</editor-fold>
@@ -321,7 +318,6 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
             // Show placeholders in drawer
             mDrawerNameText.setText("Logged Out");
             mDrawerEmailText.setText("Please log in");
-            mDrawerScoreText.setVisibility(View.GONE);
         }
     }
 
