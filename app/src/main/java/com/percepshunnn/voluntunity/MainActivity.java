@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
@@ -38,6 +39,10 @@ public class MainActivity extends AppCompatActivity
     TextView mDrawerNameText;
     TextView mDrawerEmailText;
     ImageView mDrawerProfileImage;
+
+    // A global var for the current MapScreenFragment
+    // For filtering
+    MapScreenFragment mMapScreenFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,7 @@ public class MainActivity extends AppCompatActivity
                     .add(R.id.fragment_container, mapScreenFragment)
                     .commit();
             currentScreen = HomeScreenState.MAP;
+            mMapScreenFragment = mapScreenFragment;
         }
 
         View view = navigationView.getHeaderView(0);
@@ -132,6 +138,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private NavigationView navView;
+    private MenuItem previousItem;
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -141,6 +148,7 @@ public class MainActivity extends AppCompatActivity
 
         navView = (NavigationView) findViewById(R.id.nav_view);
         Menu navMenu = navView.getMenu();
+
 
         if (id == R.id.nav_map) {
             // Show the map filters when it's relevant
@@ -153,7 +161,9 @@ public class MainActivity extends AppCompatActivity
                 MapScreenFragment frag = new MapScreenFragment();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, frag).commit();
+                mMapScreenFragment = frag;
             }
+
 
         } else if (id == R.id.nav_profile) {
             navMenu.findItem(R.id.nav_map_filters).setVisible(false);
@@ -167,6 +177,7 @@ public class MainActivity extends AppCompatActivity
                         .replace(R.id.fragment_container, frag).commit();
 
             }
+
         } else if (id == R.id.nav_leaderboard) {
             navMenu.findItem(R.id.nav_map_filters).setVisible(false);
 
@@ -179,7 +190,62 @@ public class MainActivity extends AppCompatActivity
                         .replace(R.id.fragment_container, frag).commit();
 
             }
+
+        } else if (id == R.id.nav_upcoming) {
+            navMenu.findItem(R.id.nav_map_filters).setVisible(false);
+
+            // Fragment change
+            if (currentScreen != HomeScreenState.UPCOMING) {
+                // Leaderboard is not current screen, change it!
+                currentScreen = HomeScreenState.UPCOMING;
+                UpcomingFragment frag = new UpcomingFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, frag).commit();
+
+            }
+        } else {
+
+            switch (id){
+                case R.id.nav_filter_community:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.COMMUNITY);
+                    Toast.makeText(MainActivity.this, "Showing community opportunities", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_children_and_youth:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.CHILDREN_AND_YOUTH);
+                    Toast.makeText(MainActivity.this, "Showing opportunities to help children and youth", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_education:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.EDUCATION);
+                    Toast.makeText(MainActivity.this, "Showing opportunities for education", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_elderly:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.ELDERLY);
+                    Toast.makeText(MainActivity.this, "Showing opportunities for helping the elderly", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_fundraising:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.FUNDRAISING);
+                    Toast.makeText(MainActivity.this, "Showing fundraising opportunities", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_health:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.HEALTH);
+                    Toast.makeText(MainActivity.this, "Showing opportunities to help the sick", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_humanitarian:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.HUMANITARIAN);
+                    Toast.makeText(MainActivity.this, "Showing humanitarian opportunities", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_social_service:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.SOCIAL_SERVICE);
+                    Toast.makeText(MainActivity.this, "Showing opportunities for social service", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_all:
+                    mMapScreenFragment.filterEventByTag(null);
+                    Toast.makeText(MainActivity.this, "Showing all opportunities", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -193,4 +259,5 @@ enum HomeScreenState {
     MAP,
     PROFILE,
     LEADERBOARD,
+    UPCOMING
 }

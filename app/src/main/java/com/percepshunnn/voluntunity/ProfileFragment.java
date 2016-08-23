@@ -255,8 +255,7 @@ public class ProfileFragment extends android.support.v4.app.Fragment {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         usersRef = database.getReference("users/");
 
-        // This is a mcTesty for Facebook Login
-        // TODO: this will probably be changed later
+
         mLoginButton = (LoginButton) view.findViewById(R.id.login_button);
         mLoginButton.setReadPermissions(Arrays.asList("email", "user_friends"));
 

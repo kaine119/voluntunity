@@ -25,10 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 
 
@@ -166,6 +162,10 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
         eventRoles.setText(event.getRoles());
         eventSkills.setText(event.getSkills());
 
+        for (EventInfo.Tag tag : event.getTagObjects()) {
+            Log.d("", "displayEventDetails: event tag: " + tag);
+        }
+
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,6 +174,17 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
                 startActivity(launchBrowser);
             }
         });
+    }
+
+    public void filterEventByTag(EventInfo.Tag filter) {
+        for (HashMap.Entry<Marker, EventInfo> marker : mEvents.entrySet()) {
+            EventInfo event = marker.getValue();
+            Marker mapMarker = marker.getKey();
+            mapMarker.setVisible(true);
+            if (filter != null && !event.getTagObjects().contains(filter)) {
+                mapMarker.setVisible(false);
+            }
+        }
     }
 
     @Override
