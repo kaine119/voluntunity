@@ -53,6 +53,33 @@
                     android:id="@+id/nav_filter_fundraising"
                     android:title="Fundraisers"/>
 
+                <item
+                    android:id="@+id/nav_filter_animal_welfare"
+                    android:title="Animal Welfare"/>
+
+                <item
+                    android:id="@+id/nav_filter_arts_heritage"
+                    android:title="Arts and Heritage"/>
+
+                <item
+                    android:id="@+id/nav_filter_disability"
+                    android:title="Disabilities"/>
+
+                <item
+                    android:id="@+id/nav_filter_environment"
+                    android:title="Environment"/>
+                <item
+                    android:id="@+id/nav_filter_family"
+                    android:title="Family"/>
+
+                <item
+                    android:id="@+id/nav_filter_public_service"
+                    android:title="Public Service"/>
+
+                <item
+                    android:id="@+id/nav_filter_sports"
+                    android:title="Sports"/>
+
 
 
             </group>

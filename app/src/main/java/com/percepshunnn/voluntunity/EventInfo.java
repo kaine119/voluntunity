@@ -26,7 +26,14 @@ public class EventInfo {
         HUMANITARIAN,
         CHILDREN_AND_YOUTH,
         EDUCATION,
-        FUNDRAISING
+        FUNDRAISING,
+        ANIMAL_WELFARE,
+        ARTS_HERITAGE,
+        DISABILITY,
+        ENVIRONMENT,
+        FAMILY,
+        PUBLIC_SERVICE,
+        SPORTS
     }
 
     public String lat;

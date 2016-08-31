@@ -250,6 +250,34 @@ public class MainActivity extends AppCompatActivity
                     mMapScreenFragment.filterEventByTag(null);
                     Toast.makeText(MainActivity.this, "Showing all opportunities", Toast.LENGTH_SHORT).show();
                     break;
+                case R.id.nav_filter_animal_welfare:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.ANIMAL_WELFARE);
+                    Toast.makeText(MainActivity.this, "Showing opportunities for animal welfare", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_arts_heritage:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.ARTS_HERITAGE);
+                    Toast.makeText(MainActivity.this, "Showing opportunities for arts and heritage", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_disability:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.DISABILITY);
+                    Toast.makeText(MainActivity.this, "Showing opportunities to help the disabled", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_environment:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.ENVIRONMENT);
+                    Toast.makeText(MainActivity.this, "Showing opportunities to help the environment", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_family:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.FAMILY);
+                    Toast.makeText(MainActivity.this, "Showing opportunities to help families", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_public_service:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.PUBLIC_SERVICE);
+                    Toast.makeText(MainActivity.this, "Showing opportunities for public service", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.nav_filter_sports:
+                    mMapScreenFragment.filterEventByTag(EventInfo.Tag.SPORTS);
+                    Toast.makeText(MainActivity.this, "Showing opportunities for sports", Toast.LENGTH_SHORT).show();
+                    break;
             }
 
         }
