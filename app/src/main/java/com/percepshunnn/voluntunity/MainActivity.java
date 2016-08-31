@@ -110,7 +110,17 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if (currentScreen != HomeScreenState.MAP) {
+            currentScreen = HomeScreenState.MAP;
+            MapScreenFragment frag = new MapScreenFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, frag).commit();
+            mMapScreenFragment = frag;
+        } else if (mMapScreenFragment.panelIsShown) {
+            mMapScreenFragment.hidePanel();
+        }
+
+        else {
             super.onBackPressed();
         }
     }
@@ -129,10 +139,7 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -193,10 +200,11 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_upcoming) {
             navMenu.findItem(R.id.nav_map_filters).setVisible(false);
+            setTitle("Upcoming");
 
             // Fragment change
             if (currentScreen != HomeScreenState.UPCOMING) {
-                // Leaderboard is not current screen, change it!
+                // Upcoming is not current screen, change it!
                 currentScreen = HomeScreenState.UPCOMING;
                 UpcomingFragment frag = new UpcomingFragment();
                 getSupportFragmentManager().beginTransaction()

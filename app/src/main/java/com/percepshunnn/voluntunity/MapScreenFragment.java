@@ -35,6 +35,7 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
 
 
     private SlidingUpPanelLayout infoPanelParent;
+    public boolean panelIsShown = false;
 
     private GoogleMap mGoogleMap;
 
@@ -47,6 +48,7 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
     private TextView eventRoles;
     private TextView eventSkills;
     private Button   signUp;
+
 
     private HashMap<Marker, EventInfo> mEvents = new HashMap<Marker, EventInfo>();
 
@@ -128,6 +130,7 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
                 EventInfo eventToDisplay = mEvents.get(marker);
                 displayEventDetails(eventToDisplay);
                 infoPanelParent.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                panelIsShown = true;
                 return true;
             }
         });
@@ -185,6 +188,11 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
                 mapMarker.setVisible(false);
             }
         }
+    }
+
+    public void hidePanel(){
+        infoPanelParent.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        panelIsShown = false;
     }
 
     @Override
