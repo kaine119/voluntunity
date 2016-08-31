@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--This is the menu that comes with the nav drawer-->
-
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_map"
@@ -17,22 +16,53 @@
             android:icon="@drawable/ic_leaderboard"
             android:title="Leaderboard" />
         <item
-            android:id="@+id/nav_upcomng"
-            android:icon="@drawable/ic_upcoming"
-            android:title="Upcoming" />
-
+            android:id="@+id/nav_upcoming"
+            android:icon="@drawable/ic_time"
+            android:title="Upcoming"/>
     </group>
 
-    <item android:title="Filter" android:id="@+id/nav_map_filters">
+    <item android:title="Opportunity Filters" android:id="@+id/nav_map_filters">
         <menu>
-            <!--TODO: come up with actual filters-->
-            <item
-                android:id="@+id/nav_share"
-                android:title="Filter 1" />
-            <item
-                android:id="@+id/nav_send"
-                android:title="Filter 2" />
+            <group android:checkableBehavior="none">
+
+                <item
+                    android:id="@+id/nav_filter_all"
+                    android:title="All"/>
+                <item
+                    android:id="@+id/nav_filter_elderly"
+                    android:title="The elderly"/>
+                <item
+                    android:id="@+id/nav_filter_social_service"
+                    android:title="Social Service"/>
+                <item
+                    android:id="@+id/nav_filter_health"
+                    android:title="The ill"/>
+                <item
+                    android:id="@+id/nav_filter_community"
+                    android:title="Serving the community"/>
+                <item
+                    android:id="@+id/nav_filter_humanitarian"
+                    android:title="Humanitarian efforts"/>
+                <item
+                    android:id="@+id/nav_filter_children_and_youth"
+                    android:title="Children and youths"/>
+                <item
+                    android:id="@+id/nav_filter_education"
+                    android:title="Education"/>
+                <item
+                    android:id="@+id/nav_filter_fundraising"
+                    android:title="Fundraisers"/>
+
+
+
+            </group>
         </menu>
     </item>
+
+
+
+
+
+
 
 </menu>

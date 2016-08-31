@@ -1,36 +1,32 @@
 package com.percepshunnn.voluntunity;
 
 import android.content.Intent;
-import android.content.res.TypedArray;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+
 
 /**
  * Map Fragment
@@ -40,6 +36,8 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
 
     private SlidingUpPanelLayout infoPanelParent;
 
+    private GoogleMap mGoogleMap;
+
     private TextView eventName;
     private TextView eventOrganization;
     private TextView eventDate;
@@ -48,12 +46,14 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
     private TextView eventAddress;
     private TextView eventRoles;
     private TextView eventSkills;
-    private Button signUp;
-    private TextView upcoming1;
+    private Button   signUp;
 
-    String[][] mTestArray;
+    private HashMap<Marker, EventInfo> mEvents = new HashMap<Marker, EventInfo>();
 
-    ArrayList<LatLng> locations = new ArrayList();
+    // Database
+    private DatabaseReference mEventsRef;
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -65,25 +65,15 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.content_map, container, false);
+        getActivity().setTitle("Voluntunity");
         return v;
+
     }
 
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        TypedArray ta = getResources().obtainTypedArray(R.array.events);
-        int n = ta.length();
-        String[][] array = new String[n][];
-        for (int i=0; i < n; i++) {
-            int id = ta.getResourceId(i, 0);
-            if (id > 0) {
-                array[i] = getResources().getStringArray(id);
-            }
-        }
-        ta.recycle();
-        mTestArray = array;
 
 
 
@@ -92,6 +82,7 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
 
         mapFragment.getMapAsync(this);
 
+        // View References
         infoPanelParent = (SlidingUpPanelLayout) view.findViewById(R.id.info_panel_parent);
         infoPanelParent.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         eventName = (TextView) view.findViewById(R.id.eventName);
@@ -103,37 +94,22 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
         eventRoles = (TextView) view.findViewById(R.id.eventRoles);
         eventSkills = (TextView) view.findViewById(R.id.eventSkills);
         signUp = (Button) view.findViewById(R.id.signUp);
-        upcoming1 = (TextView) view.findViewById(R.id.upcoming1);
         Log.d("MapFragment", "onViewCreated");
+
+
     }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-
-        for(String[] event : mTestArray){
-            LatLng location = new LatLng(Double.parseDouble(event[1]), Double.parseDouble(event[2]));
-            googleMap.addMarker(new MarkerOptions()
-                    .position(location)
-                    .title(event[0]));
-        }
+        mGoogleMap = googleMap;
 
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(1.379348, 103.849876), 10f));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(1.379348, 103.849876), 10f));
 
 
-
-        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                infoPanelParent.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                Log.d("MapFragment", "onMarkerClick: panel to open");
-                displayEventDetails(marker.getTitle());
-                return true;
-            }
-        });
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 infoPanelParent.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
@@ -143,32 +119,79 @@ public class MapScreenFragment extends android.support.v4.app.Fragment implement
 
         Log.d("MapFragment", "onMapReady");
 
-
+        // Go get the events available!
+        mEventsRef = FirebaseDatabase.getInstance().getReference("tasks");
+        mEventsRef.addListenerForSingleValueEvent(firebaseCallback);
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                EventInfo eventToDisplay = mEvents.get(marker);
+                displayEventDetails(eventToDisplay);
+                infoPanelParent.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                return true;
+            }
+        });
     }
 
-    public void displayEventDetails(final String id) {
-        String[] eventToDisplay = new String[0];
-
-        for (String[] event : mTestArray) {
-            if (event[0].equals(id)) {
-                eventToDisplay = event;
-                break;
+    private ValueEventListener firebaseCallback = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            for (DataSnapshot event : dataSnapshot.getChildren()) {
+                EventInfo eventToAdd = event.getValue(EventInfo.class);
+                Marker marker = mGoogleMap.addMarker(
+                        new MarkerOptions()
+                        .position(eventToAdd.getLatLng())
+                );
+                mEvents.put(marker, eventToAdd);
             }
         }
-        if (eventToDisplay != null) {
-            eventName.setText(eventToDisplay[3]);
-            eventOrganization.setText(eventToDisplay[4]);
-            eventDate.setText(eventToDisplay[5]);
-            eventTime.setText(eventToDisplay[6]);
-            eventDescription.setText(eventToDisplay[7]);
-            eventAddress.setText(eventToDisplay[8]);
-            eventRoles.setText(eventToDisplay[9]);
-            eventSkills.setText(eventToDisplay[10]);
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+    private void displayEventDetails(final EventInfo event) {
+        eventName.setText(event.getTitle());
+        eventOrganization.setText(event.getOrg());
+        eventDate.setText(event.getDate());
+        eventTime.setText(event.getTime());
+        eventDescription.setText(event.getDesc());
+        eventAddress.setText(event.getAddress());
+        eventRoles.setText(event.getRoles());
+        eventSkills.setText(event.getSkills());
+
+        for (EventInfo.Tag tag : event.getTagObjects()) {
+            Log.d("", "displayEventDetails: event tag: " + tag);
         }
 
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uriUrl = Uri.parse(event.getUrl());
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                startActivity(launchBrowser);
+            }
+        });
     }
 
+    public void filterEventByTag(EventInfo.Tag filter) {
+        for (HashMap.Entry<Marker, EventInfo> marker : mEvents.entrySet()) {
+            EventInfo event = marker.getValue();
+            Marker mapMarker = marker.getKey();
+            mapMarker.setVisible(true);
+            if (filter != null && !event.getTagObjects().contains(filter)) {
+                mapMarker.setVisible(false);
+            }
+        }
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mEventsRef.removeEventListener(firebaseCallback);
+    }
 }
 
 

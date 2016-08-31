@@ -10,6 +10,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:background="@color/colorPrimaryDark"
+
         >
         <TextView
             android:id="@+id/eventName"
@@ -17,9 +18,15 @@
             android:layout_height="match_parent"
             android:text="Opportunity Title"
             android:textAppearance="?android:textAppearanceLarge"
-            android:textColor="#fff"/>
+            android:textColor="#fff" />
     </LinearLayout>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <TextView
         android:id="@+id/eventOrganization"
         android:layout_width="match_parent"
@@ -180,14 +187,13 @@
     </LinearLayout>
 
 
-
-
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/signUp"
         android:text="Sign Up"
         android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

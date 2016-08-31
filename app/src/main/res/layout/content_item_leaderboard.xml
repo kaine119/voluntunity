@@ -1,26 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:text="Name"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:id="@+id/leaderboard_item_name"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_action_achievement"
+        android:id="@+id/leaderboard_item_trophy"
+        android:layout_centerInParent="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/leaderboard_item_name"
         android:text="900"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:textColor="@android:color/black"
         android:id="@+id/leaderboard_item_score"
+        android:layout_alignTop="@id/leaderboard_item_name"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:layout_toLeftOf="@id/leaderboard_item_trophy"
         />
 
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#30000000"
+        android:layout_below="@id/leaderboard_item_name"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+
+    />
 </RelativeLayout>

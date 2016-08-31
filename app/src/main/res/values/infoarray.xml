@@ -1,37 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="event1">
-        <item name="id">item1</item>
-        <item name="location_lat">1.280691</item>
-        <item name="location_lon">103.824854</item>
-        <item name="title">Meals home delivery for elderly</item>
-        <item name="organisation">Presbyterian Community Services</item>
-        <item name="date">05-Aug-16</item>
-        <item name="time">9 am to 12 pm</item>
-        <item name="description">Boundaries served: Jalan Bukit Merah, Queenstown, Commonwealth, Holland close, Ghim Moh, Dover, Clementi, West Coast, Pandan Garden Teban Garden.</item>
-        <item name="address">Dorcas Home Care Service,Blk 105 Jalan Bukit Merah #01-1912 </item>
-        <item name="roles"> To assist in the meals run to the home of the frail elderly. </item>
-        <item name="skills">No experience needed. Able to speak dialects or simple Malay.</item>
-
-    </string-array>
-    <string-array name="event2">
-        <item name="id">item2</item>
-        <item name="location_lat">1.350510</item>
-        <item name="location_lon">103.849747</item>
-        <item name="title">Habitat Flag Day</item>
-        <item name="organisation">Habitat for Humanity Singapore Ltd</item>
-        <item name="date">06-Aug-16</item>
-        <item name="time">9 am to 1 pm</item>
-        <item name="description">Thank you for expressing your interest in joining us for Small Change for Big Change (Flag Day) 2016! Through this event, we hope to:- Raise awareness about the work HFHSG does in eradicating poverty housing both locally and abroad, and- Raise funds to cover the expenses of daily operations and programmes of HFHSG</item>
-        <item name="address">Bishan Bus Interchange 514 Bishan Street 13 Singapore 570514</item>
-        <item name="roles">Collect donations from public.</item>
-        <item name="skills">NA</item>
-    </string-array>
-    <array name="events">
-        <item>@array/event1</item>
-        <item>@array/event2</item>
-    </array>
-
+    <string name="eventsJson">
+    {
+    \"events\":[
+        {
+            \"lat\": \"1.280691\",
+            \"lng\": \"103.824854\",
+            \"address\":\"Dorcas Home Care Service,Blk 105 Jalan Bukit Merah #01-1912\",
+            \"title\":\"Meals home delivery for elderly\",
+            \"org\":\"Presbyterian Community Services\",
+            \"date\":\"06-Aug-16\",
+            \"time\":\"9 am to 1 pm\",
+            \"desc\":\"Boundaries served: Jalan Bukit Merah, Queenstown, Commonwealth, Holland close, Ghim Moh, Dover, Clementi, West Coast, Pandan Garden Teban Garden.\",
+            \"roles\":\"To assist in the meals run to the home of the frail elderly.\",
+            \"skills\":\"No experience needed. Able to speak dialects or simple Malay.\",
+            \"url\":\"https://www.sgcares.org/public/Other/SGCares_P_Others_ActivtyDetails.aspx?PCID=34005101-327a-4591-b9ea-2fb8ea0ff716\"
+        },
+        {
+            \"lat\": \"1.350510\",
+            \"lng\": \"103.849747\",
+            \"address\":\"Bishan Bus Interchange 514 Bishan Street 13 Singapore 570514\",
+            \"org\":\"Habitat for Humanity Singapore Ltd\",
+            \"title\":\"Habitat Flag Day\",
+            \"date\":\"06-Aug-16\",
+            \"time\":\"9 am to 1 pm\",
+            \"desc\":\"Thank you for expressing your interest in joining us for Small Change for Big Change (Flag Day) 2016! Through this event, we hope to:- Raise awareness about the work HFHSG does in eradicating poverty housing both locally and abroad, and- Raise funds to cover the expenses of daily operations and programmes of HFHSG\",
+            \"roles\":\"Collect donations from public.\",
+            \"skills\":\"NA\",
+            \"url\":\"https://www.sgcares.org/public/Other/SGCares_P_Others_ActivtyDetails.aspx?PCID=0fa0e891-0802-4875-a095-a013b1a74442\"
+        },
+        {
+         \"lat\":\"1.376642\",
+         \"lng\":\"103.879360\",
+         \"address\":\"957 Hougang St 91 #01-280\",
+         \"title\":\"BCARE Tuition Programme for Low-Income Families\",
+         \"org\":\"Bethesda Community Assistance And Relationship Enrichment Centre\",
+         \"date\":\"08-Aug-16\",
+         \"time\":\"7pm to 9.45pm\",
+         \"desc\":\"A heavily subsidized tuition programme for students from low-income families. Our programme aims to help students from low-income families to excel in their studies and raise their self-confidence by improving on their academic foundations.\",
+         \"roles\":\"To provide small-group tuition to children from low-income families (Upper Primary and lower secondary students) for the subjects English and Mathematics\",
+         \"skills\":\"- 18 years old and above - Achieved satisfactory results in O/ A levels/ University - Able to teach/ mentor primary and secondary school students in their studies - Experience working with children and youths is a bonus\",
+         \"url\":\"https://www.sgcares.org/public/Other/SGCares_P_Others_ActivtyDetails.aspx?PCID=5ed5e941-9a87-4db0-9596-c2ee47c298ae\"
+      },
+      {
+         \"address\":\"Ren Ci Community Hospital 71 Irrawaddy Road Singapore 329562\",
+         \"lat\":\"1.322970\",
+         \"lng\":\"103.845705\",
+         \"title\":\"National Day Celebration with the Elderly@Ren Ci Community Hospital\",
+         \"org\":\"SG Cares VL Group\",
+         \"date\":\"09-Aug-16\",
+         \"time\":\"10.00am to 12.00pm\",
+         \"desc\":\"Ren Ci Community Hospital is a charity health care organisation committed to providing high quality affordable medical care for the needy sick, based on the principles of loving kindness compassion.We hope to recruit volunteers to engage our elderly in a simple DIY card session at Wards 11, 12, 13. Volunteers will help our elderly to pen down their thoughts and memories about Singapore and decorate the cards. Each of the wards will have a separate handicraft session and music performance.\",
+         \"roles\":\"Volunteers will interact and befriend our elderly, help them organise their thoughts and write them onto the DIY card.\",
+         \"skills\":\"Able to communicate with the elderly. Knowledge of one or more local languages and/or dialects is a bonus. Volunteers with pleasant disposition and enjoy working with people.\",
+         \"url\":\"https://www.sgcares.org/public/Other/SGCares_P_Others_ActivtyDetails.aspx?PCID=22f6c7ea-6fbc-49f4-9a52-f90026149b8f\"
+      },
+      {
+         \"lat\":\"1.302074\",
+         \"lng\":\"103.882867\",
+         \"address\":\"10 Jalan Batu #01-06\",
+         \"title\":\"Game Sessions with Elderly\",
+         \"org\":\"St. Hildas Community Services Centre\",
+         \"date\":\"12-Aug-16\",
+         \"time\":\"1.00pm - 3.00pm\",
+         \"desc\":\"An afternoon of games and activities for the residents. Please note that this activity is managed by St. Hildas Community Services Centre. Staff of St. Hildas Community Services Centre will contact volunteers who have signed up for this activity.\",
+         \"roles\":\"Befriending. Preparing and distributing refreshment. Assist in the conduct of games and activities.\",
+         \"skills\":\"Ability to communicate in Mandarin. Dialect would be a bonus. To be able to commit at least 2 times a month.\",
+         \"url\":\"https://www.sgcares.org/public/Other/SGCares_P_Others_ActivtyDetails.aspx?PCID=acfa6950-a9a4-4e5b-9fa7-112e0d3c92b1\"
+      },
+      {
+         \"title\":\"Charity pushcart at Sun Plaza_Friends of The Disabled Society\",
+         \"org\":\"SingYouth Hub\",
+         \"lat\":\"1.448217\",
+         \"lng\":\"103.819504\",
+         \"address\":\"30, SEMBAWANG DRIVE, SUN PLAZA\",
+         \"date\":\"13-Aug-16\",
+         \"time\":\"10.00am to 3.30pm\",
+         \"desc\":\"To raise fund for Friends of The Disabled Society To sell merchandise at the pushcartTo raise fund at SMRT locations-Yishun, Sembawang and Woodlands. Please note that this activity is managed by Singyouth Hub. Staff of Singyouth Hub will contact volunteers who have signed up for this activity.\",
+         \"roles\":\"To sell FDSs merchandise for fund-raising To raise awareness for FDS To support FDSs training workshop conducted at the malls\",
+         \"skills\":\"Training workshop conducted on 07 Aug, 2.00pm to 4.30pm at SAA Global Education, located at TrippleOne Somerset.\",
+         \"url\":\"https://www.sgcares.org/public/Other/SGCares_P_Others_ActivtyDetails.aspx?PCID=050dea72-58b7-40e3-83c9-2b6cd4fda738\"
+      },
+      {
+         \"lat\":\"1.335458\",
+         \"lng\":\"103.866495\",
+         \"address\":\"Blk 147 Potong Pasir Ave 1 #02-83\",
+         \"title\":\"Health Talks for Elderly\",
+         \"org\":\"Calvary Community Care\",
+         \"date\":\"16-Aug-16\",
+         \"time\":\"9 am to 12 noon\",
+         \"desc\":\"A series of Health Talks for our elderly to equip them with some knowledge about different health care. Please note that this activity is managed by Calvary Community Care. Staff of Calvary Community Care will contact volunteers who have signed up for this activity.\",
+         \"roles\":\"Help in set up and keep the chairs, bring the brochures to the venue. Assist in the talks.\",
+         \"skills\":\"Age above 18 years old. Mandarin speaking prefer. Dialect will be an added advantage. Has compassion and patience with the elderly.\",
+         \"url\":\"https://www.sgcares.org/public/Other/SGCares_P_Others_ActivtyDetails.aspx?PCID=f3cbd497-237a-4346-94f4-488fd60258e8\"
+      },
+      {
+         \"lat\":\"1.350321\",
+         \"lng\":\"103.848622\",
+         \"address\":\"Junction 8 (Office Tower) 9 Bishan Place 06-04\",
+         \"title\":\"Fund Raising\",
+         \"org\":\"Muscular Dystrophy Association (Singapore)\",
+         \"date\":\"16-Aug-16\",
+         \"time\":\"5.15pm-8.30pm\",
+         \"desc\":\"We are Team Valienté, a team of four, comprising of Natalie Chan, Chan Jing, Chen Meng Jia and Audrey Chrysilla from Dunman High School. We are participating in the Citi-YMCA Youth-for-Causes project to raise funds for the Muscular Dystrophy Association Singapore (MDAS) so as to improve the quality of life of MDAS members.As such, we will be organising a Door to Door Fund Raising. We will be raising funds through public donation and sales of MDAS crafts.This activity will be managed by Team Please note that this activity is managed by Muscular Dystrophy Association Singapore. Staff of Muscular Dystrophy Association Singapore will contact volunteers who have signed up for this activity.\",
+         \"roles\":\"Visiting house to house to raise funds through public donation and sales of MDAS crafts.\",
+         \"skills\":\"None\",
+         \"url\":\"https://www.sgcares.org/public/Other/SGCares_P_Others_ActivtyDetails.aspx?PCID=29f4cfc0-8046-42fc-a4ea-d5f7d05d91d7\"
+      },
+        {
+         \"lat\":\"1.444750\",
+         \"lng\":\"103.817396\",
+         \"address\":\"20, SEMBAWANG CRESCENT,Singapore 757092\",
+         \"title\":\"Social activity with the elderly residents\",
+         \"org\":\"Singapore Christian Home\",
+         \"date\":\"13 Aug 2016\",
+         \"time\":\"9:30 AM to 11:30 AM\",
+         \"desc\":\"Engage in fun and interacting activities with our residents for a meaningful and fulfilling experience!\",
+         \"roles\":\"Volunteer\",
+         \"skills\":\"NA\",
+         \"url\":\"https://www.giving.sg/volunteer-event?event_activity_id=3445212\"
+      },
+      {
+         \"title\":\"Listening Hearts\",
+         \"org\":\"Bright Vision Hospital\",
+         \"date\":\"13 Aug 2016\",
+         \"time\":\"9:30 AM to 11:30 AM\",
+         \"desc\":\"You are the Listening Hearts of our rehabilitative and palliative patients. Your presence will instill joy in their lives. 1. Provide companionship to our patients 2. Wheel them around our hospital if they wish to 3. Listen to their life stories with patience and kindness and accept our patients for who they are 4. Keep their personal information confidential 5. Tell our patients your own stories if they would prefer to listen 6. Bring ice-breaking materials such as card games or magazines\",
+         \"roles\":\"Volunteer\",
+         \"skills\":\"NA\",
+         \"url\":\"https://www.giving.sg/volunteer-event?event_activity_id=3682376\",
+         \"address\":\"5, LORONG NAPIRI, BRIGHT VISION HOSPITAL Level 2 Reception, Singapore 547530\",
+         \"lat\":\"1.371523\",
+         \"lng\":\"103.877834\"
+      },
+      {
+         \"lat\":\"1.444750\",
+         \"lng\":\"103.817396\",
+         \"address\":\"20, SEMBAWANG CRESCENT,Singapore 757092\",
+         \"title\":\"Social activity with the elderly residents\",
+         \"org\":\"Singapore Christian Home\",
+         \"date\":\"13 Aug 2016\",
+         \"time\":\"9:30 AM to 11:30 AM\",
+         \"desc\":\"Engage in fun and interacting activities with our residents for a meaningful and fulfilling experience!\",
+         \"roles\":\"Volunteer\",
+         \"skills\":\"NA\",
+         \"url\":\"https://www.giving.sg/volunteer-event?event_activity_id=3445212\"
+      },
+      {
+         \"title\":\"Listening Hearts\",
+         \"org\":\"Bright Vision Hospital\",
+         \"date\":\"13 Aug 2016\",
+         \"time\":\"9:30 AM to 11:30 AM\",
+         \"desc\":\"You are the Listening Hearts of our rehabilitative and palliative patients. Your presence will instill joy in their lives. 1. Provide companionship to our patients 2. Wheel them around our hospital if they wish to 3. Listen to their life stories with patience and kindness and accept our patients for who they are 4. Keep their personal information confidential 5. Tell our patients your own stories if they would prefer to listen 6. Bring ice-breaking materials such as card games or magazines\",
+         \"roles\":\"Volunteer\",
+         \"skills\":\"NA\",
+         \"url\":\"https://www.giving.sg/volunteer-event?event_activity_id=3682376\",
+         \"address\":\"5, LORONG NAPIRI, BRIGHT VISION HOSPITAL Level 2 Reception, Singapore 547530\",
+         \"lat\":\"1.371523\",
+         \"lng\":\"103.877834\"
+      }
+        ]
+    }
+    </string>
 
 
 </resources>
