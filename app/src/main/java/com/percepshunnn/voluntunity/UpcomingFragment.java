@@ -37,7 +37,7 @@ public class UpcomingFragment extends android.support.v4.app.Fragment {
         mAdapter = new UpcomingEntryAdapter(mEvents, v);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        ((SlidingUpPanelLayout) v.findViewById(R.id.upcoming_info_panel_parent)).setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
 
 
         mEvents.add(new EventInfo("", "", "5, LORONG NAPIRI, BRIGHT VISION HOSPITAL Level 2 Reception, Singapore 547530",
